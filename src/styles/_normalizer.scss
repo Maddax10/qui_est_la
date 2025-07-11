@@ -1,0 +1,25 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+h1 {
+  font-weight: 900;
+}
+
+.button {
+  transition: ease var(--transitionTime);
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  background-color: var(--blue);
+  color: var(--white);
+  &:hover {
+    box-shadow : inset 0 0 5px 2px var(--darkRed);
+  }
+}
+.label {
+  font-weight: 700;
+  font-size: 0.85rem;
+}

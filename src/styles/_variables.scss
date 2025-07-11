@@ -1,0 +1,30 @@
+@use "sass:color";
+$white : white;
+$black : black;
+$red : #ad0000;
+$darkRed : color.adjust($red, $lightness : -10%);
+$lightRed : color.adjust($red, $lightness : 40%);
+$blue : #0000ad;
+$lightBlue : color.adjust($blue, $lightness: 10%);
+$lighterBlue : color.adjust($blue, $lightness: 40%);
+$gray : gray;
+$lightGray : color.adjust($gray, $lightness : 20%);
+$lighterGray : color.adjust($gray, $lightness : 35%);
+$lightererGray : color.adjust($gray, $lightness : 46%);
+$transitionTime : .3s;
+
+:root{
+  --white : #{$white};
+  --black : #{$black};
+  --blue : #{$blue};
+  --gray : #{$gray};
+  --lightGray : #{$lightGray};
+  --lighterGray : #{$lighterGray};
+  --lightBlue : #{$lightBlue};
+  --transitionTime : #{$transitionTime};
+  --red : #{$red};
+  --lighterBlue : #{$lighterBlue};
+  --lightererGray : #{$lightererGray};
+  --darkRed : #{$darkRed};
+  --lightRed : #{$lightRed};
+}

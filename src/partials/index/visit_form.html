@@ -1,0 +1,55 @@
+<div class="grid">
+  <!--Switch entrée/sortie-->
+  <div class="arrivalDeparture">
+    <div class="arrivalDeparture__arrival" id="tabEntree">Entrée</div>
+    <div class="arrivalDeparture__departure" id="tabSortie">Sortie</div>
+  </div>
+
+  <!--===Entrée====-->
+  <section class="arrival" id="arrival">
+    <form method="post" id="arrivalForm">
+    <h1 class="arrival__title">Identification</h1>
+
+      <!--fields-->
+      <div class="arrival__fields">
+        <input type="text" placeholder="Nom" />
+        <input type="text" placeholder="Prénom" />
+        <input type="email" placeholder="Email" />
+      </div>
+      <!--inputs radio-->
+      <label class="label arrival__motifLabel">Motif de la visite :</label>
+      <div class="arrival__inputsRadio">
+        <div class="arrival__inputsRadioFormation">
+          <input type="radio" id="formation" name="choix" value="Formation" />
+          <label for="formation">Formation</label>
+        </div>
+        <div class="arrival__inputsRadioVisite">
+          <input type="radio" id="visite" name="choix" value="Visite" />
+          <label for="visite">Visite</label>
+        </div>
+      </div>
+      <select name="arrival__typeVisite">
+        <option value="null"></option>
+        <option value="test">test</option>
+      </select>
+      <button class="button arrival__button">Valider l'entrée</button>
+    </form>
+    <a href="" class="arrival__qrLink">Vous avez un QR Code ou vous êtes déjà enregistré ?</a>
+  </section>
+
+  <!--===Sortie====-->
+  <section class="departure" id="departure">
+    <h1 class="departure__title">Sortie</h1>
+
+    <div class="departure__qrCode">
+      <label class="label departure__labelQr">Scanner votre QR Code</label>
+      <div class="departure__scanZone"><span>scan zone</span></div>
+    </div>
+
+    <form method="post" class="departure__deconnexionForm">
+      <label for="" class="label departure__labelMail">Saisissez votre email</label>
+      <input type="email" placeholder="Email" class="departure__mail"/>
+      <button class="button departure__button">Valider la sortie</button>
+    </form>
+  </section>
+</div>

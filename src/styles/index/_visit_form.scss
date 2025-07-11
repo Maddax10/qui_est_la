@@ -1,0 +1,139 @@
+.grid {
+  width: 50dvw;
+  padding-block: 1rem;
+  justify-self: center;
+  border-radius: 1rem;
+  box-shadow: inset 0 0 0 1px var(--lighterGray), 0 0 8px 0 var(--lightGray);
+  background-color: var(--white);
+}
+
+.arrivalDeparture {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-self: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  border-bottom: 1px solid var(--lighterGray);
+
+  &__arrival,
+  &__departure {
+    transition: ease var(--transitionTime);
+    font-weight: 600;
+    padding: 1rem;
+    user-select: none;
+    cursor: pointer;
+    &:hover {
+      color: var(--black);
+      box-shadow: 0 1px 0 0 black;
+    }
+  }
+  &__arrival{
+    color: var(--lightBlue);
+
+  }
+    &__departure{
+    color: var(--red);
+
+  }
+}
+//Sélecteur de classe avancé, ciblage de tous les inputs text et email et les selects
+input,
+select {
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: inset 0 0 0 1px var(--lighterBlue), 0 0 8px 0 var(--lighterGray);
+  padding: 0.4rem;
+}
+
+.arrival {
+  display:grid;
+  padding: 1rem;
+  &__title {
+    color: var(--blue);
+  }
+  &__fields {
+    display: flex;
+    gap: 0.5rem;
+    padding-block-end: 0.5rem;
+    input {
+      width: 100%;
+    }
+  }
+  &__motifLabel {
+    color: var(--blue);
+    font-weight: 600;
+  }
+  &__inputsRadio {
+    display: flex;
+    flex-direction: column;
+    user-select: none;
+    //Enle
+    input[type="radio"] {
+      margin-inline: 0;
+      box-shadow: none;
+      cursor: pointer;
+    }
+  }
+
+  &__button {
+    width: 100%;
+    margin-block: 1rem;
+  }
+  &__qrLink {
+    width: fit-content;
+    display: flex;
+    justify-self: center;
+    color: var(--lightBlue);
+    &:hover {
+      color: var(--blue);
+    }
+  }
+}
+
+.departure {
+  padding: 1rem;
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  gap:.5rem;
+
+  &__title {
+    color: var(--red);
+    grid-column: span 2;
+  }
+  &__qrCode{
+    height:fit-content;
+    background-color: var(--lighterGray);
+    box-shadow: 0 0 0 1px var(--lightGray);
+
+    padding:.5rem;
+    border-radius: .5rem;
+  }
+  &__labelQr{
+    padding-block:.5rem;
+    display:flex;
+  }
+  &__scanZone{
+    display:flex;
+    background-color: var(--lightererGray);
+    height:100px;
+    border-radius: .25rem;
+    box-shadow: 0 0 0 1px var(--lightGray);
+    align-items: center;
+    justify-content: center;
+    span{
+      opacity: 50%;
+      user-select: none;
+    }
+  }
+  &__labelMail{
+    color:var(--red);
+  }
+  &__mail{
+  box-shadow: inset 0 0 0 1px var(--lightRed), 0 0 8px 0 var(--lighterGray);
+
+  }
+  &__button{
+    background-color: var(--red);
+  }
+} 

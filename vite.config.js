@@ -29,7 +29,7 @@ const htmlFiles = readdirSync(__dirname)
 export default {
   plugins: [
     handlebars({
-      partialDirectory: resolve(__dirname, 'src/partials')
+      partialDirectory: resolve(__dirname, './src/partials')
     }),
   ],
   resolve: {
