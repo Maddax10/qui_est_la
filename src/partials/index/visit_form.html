@@ -12,27 +12,26 @@
 
       <!--fields-->
       <div class="arrival__fields">
-        <input type="text" placeholder="Nom" />
-        <input type="text" placeholder="Prénom" />
-        <input type="email" placeholder="Email" />
+        <input type="text" placeholder="Nom" id="registerName"/>
+        <input type="text" placeholder="Prénom" id="registerFirstname"/>
+        <input type="email" placeholder="Email" id="registerEmail"/>
       </div>
       <!--inputs radio-->
       <label class="label arrival__motifLabel">Motif de la visite :</label>
       <div class="arrival__inputsRadio">
         <div class="arrival__inputsRadioFormation">
-          <input type="radio" id="formation" name="choix" value="Formation" />
+          <input type="radio" id="formation" name="choix" value="formation" />
           <label for="formation">Formation</label>
         </div>
         <div class="arrival__inputsRadioVisite">
-          <input type="radio" id="visite" name="choix" value="Visite" />
+          <input type="radio" id="visite" name="choix" value="visite" />
           <label for="visite">Visite</label>
         </div>
       </div>
-      <select name="arrival__typeVisite">
+      <select name="arrival__typeVisite" id="listboxRegister">
         <option value="null"></option>
-        <option value="test">test</option>
       </select>
-      <button class="button arrival__button">Valider l'entrée</button>
+      <button class="button arrival__button" id="registerBtn">Valider l'entrée</button>
     </form>
     <a href="" class="arrival__qrLink">Vous avez un QR Code ou vous êtes déjà enregistré ?</a>
   </section>
