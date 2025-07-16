@@ -1,5 +1,5 @@
 import '../styles/style.scss'
-const apiUrl = "http://localhost:3000/API"
+const apiUrl = "https://api-nodejs-e6am.onrender.com/API";
 
 const arrival = document.querySelector("#arrival");
 const departure = document.querySelector("#departure");
