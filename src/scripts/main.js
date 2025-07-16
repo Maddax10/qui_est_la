@@ -1,50 +1,152 @@
 import '../styles/style.scss'
-const apiUrl = "http://localhost:3000"
+const apiUrl = "http://localhost:3000/API"
 
-const arrivalSection = document.querySelector("#arrival");
-const departureSection = document.querySelector("#departure");
-const listboxRegister = document.querySelector("#listboxRegister");
-
-let currentUserId = 0;
-
+const arrival = document.querySelector("#arrival");
+const departure = document.querySelector("#departure");
+const detail_visitors = document.querySelector("#detail_visitors");
+const arrivalDepartureTab = document.querySelector("#arrivalDepartureTab");
+const arrivalForm = document.querySelector("#arrivalForm");
+const departureForm = document.querySelector("#departureForm");
+const arrival_qrLink = document.querySelector("#arrival_qrLink");
+const arrival_connexion_form = document.querySelector("#arrival_connexion_form");
 //Permet de savoir quel onglet est actif et lequel ne l'est pas
 //1ère case = onglet "Entrée", 
 //2e case   = onglet "Sortie"
 let tabsBool = [1, 0];
 
-document.addEventListener("click", ev => handleClicks(ev));
+//=========================================================================================
+//Event & Handles
+//=========================================================================================
 
 const handleClicks = (ev) => {
   const target = ev.target;
 
   if (target.id === "tabEntree" || target.id === "tabSortie") setActiveTab(target.id);
   if (target.id === "registerBtn") register(ev);
+  if (target.id === "arrival_qrLink") showConnexionForm(ev);
   if (target.id === "formation" || target.id === "visite") switchListboxChoices(ev);
+}
+
+const handleSubmits = (ev) => {
+  ev.preventDefault();
+
+  if (ev.target.id === "arrivalForm") register(ev);
+  if (ev.target.id === "departureForm") disconnect(ev);
+  if (ev.target.id === "arrival_qrLink") showConnexionForm();
+  if (ev.target.id === "arrival_connexion_form") connexion();
+
+}
+
+arrivalDepartureTab.addEventListener("click", handleClicks);
+arrival.addEventListener("click", handleClicks);
+departure.addEventListener("click", handleClicks);
+arrival_qrLink.addEventListener("click", handleSubmits);
+arrivalForm.addEventListener("submit", handleSubmits);
+departureForm.addEventListener("submit", handleSubmits);
+arrival_connexion_form.addEventListener("submit", handleSubmits);
+
+//______________________________________________________________________________________________________
+
+const connexion = async () => {
+  console.log("connexion");
+  //1) récupérer les infos via le formdata
+  let formdataConnexion = new FormData(arrival_connexion_form);
+  const datasConnexion = Object.fromEntries(formdataConnexion.entries());
+  console.log(datasConnexion);
+
+  const email_visitors = datasConnexion.email_visitors;
+
+const motif_visitors = document.querySelector('input[name="motif_visitors"]:checked')?.value;  const detail_visitors = document.querySelector("#detail_visitors")?.value;
+
+  if (!motif_visitors || !detail_visitors) {
+    alert("Il manque le motif/le détail");
+    return;
+  }
+
+  try {
+    const checkRegister = await fetch(`${apiUrl}/visitors/${encodeURIComponent(email_visitors)}`);
+    const checkConnected = await fetch(`${apiUrl}/visitors/connected/${encodeURIComponent(email_visitors)}`);
+
+    const existingRegister = await checkRegister.json();
+    const existingConnected = await checkConnected.json();
+    console.log("existingRegister.registered", existingRegister.registered)
+
+    if (!existingRegister.registered) {
+      alert("Cet email n'est pas enregistré !");
+      return;
+    }
+    else if (existingConnected.connected) {
+      alert("Cet email est déja connecté !");
+      return;
+    }
+    else {
+      //Récupérer les infos dans la BD de la dernière ligne du visitor
+
+      fetch(`${apiUrl}/visitors/${encodeURIComponent(email_visitors)}`)
+        .then(response => response.json())
+        .then(datas => {
+          //supprimer les données inutiles
+          let visitor = datas.visitor[0];
+          delete visitor.id_visitors;
+          delete visitor.arrival_visitors;
+          delete visitor.departure_visitors;
+          delete visitor.motif_visitors;
+          delete visitor.detail_visitors;
+          visitor.motif_visitors = motif_visitors;
+          visitor.detail_visitors = detail_visitors;
+          console.log(visitor);
+          // créer le visitor
+          fetch(`${apiUrl}/visitors`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datas.visitor[0])
+          })
+            .then(response => response.json())
+            .then(datas => {
+              console.log(datas)
+              if (!datas.error)
+                alert('Vous êtes enregistré sur le site !')
+              else
+                alert('Erreur : ' + datas.error)
+            });
+        })
+
+    }
+  } catch (error) {
+    alert("Erreur lors de la vérification de l'email.");
+    return;
+  }
+}
+
+const showConnexionForm = () => {
+  arrival_connexion_form.classList.remove("hidden");
 }
 
 const switchListboxChoices = (ev) => {
   //reset the box choices
-  listboxRegister.innerHTML = `<option value="null"></option>`;
+  detail_visitors.innerHTML = ``;
   if (ev.target.id === "visite") {
     //get trainers
-    fetch(`${apiUrl}/user`)
+    fetch(`${apiUrl}/personnels`)
       .then(response => response.json())
-      .then(datas => {
-        console.log(datas);
+      .then(personnels => {
+        console.log("personnels", personnels);
         //Pour chaque trainers dans datas, je les rajoute à la liste de choix
-        datas.forEach(user => {
-          listboxRegister.innerHTML += `<option value=\"${user.id_user}\">${user.name_user} ${user.firstname_user}</option>`;
+        personnels.forEach(personnel => {
+          detail_visitors.innerHTML += `<option value=\"${personnel.name_personnels} ${personnel.firstname_personnels}\">${personnel.name_personnels} ${personnel.firstname_personnels}</option>`;
         });
       });
   }
   else if (ev.target.id === "formation") {
     fetch(`${apiUrl}/formations`)
       .then(response => response.json())
-      .then(datas => {
-        console.log(datas);
+      .then(formations => {
+        console.log("formations : ", formations);
         //Pour chaque trainers dans datas, je les rajoute à la liste de choix
-        datas.forEach(formation => {
-          listboxRegister.innerHTML += `<option value=\"${formation.id_formation}\">${formation.nom_formation}</option>`;
+        formations.forEach(formation => {
+          detail_visitors.innerHTML += `<option value=\"${formation.nom_formation}\">${formation.nom_formation}</option>`;
         });
       });
   }
@@ -52,67 +154,94 @@ const switchListboxChoices = (ev) => {
 
 const register = async (ev) => {
 
-  //====================================================
-  //pas fini, POUR UNE VISITE SEULEMENT
-  //====================================================
-
   ev.preventDefault();
-  const name_user = document.querySelector("#registerName").value;
-  const firstname_user = document.querySelector("#registerFirstname").value;
-  const email_user = document.querySelector("#registerEmail").value;
+  //1) récupérer les infos via le formdata
+  let formdata = new FormData(arrivalForm);
+  const datas = Object.fromEntries(formdata.entries());
+  console.log(datas);
 
-  const user = {
-    "name_user": name_user,
-    "firstname_user": firstname_user,
-    "email_user": email_user,
+  // Vérifier les champs
+  for (const value of Object.values(datas)) {
+    if (!value || value === "") {
+      alert('Champ obligatoire vide !');
+      return;
+    }
   }
-  //1) créer l'utilisateur
-  await fetch(`${apiUrl}/user`, {
+
+  // 2) Vérifier si l'utilisateur est déjà enregistré
+  const email = datas.email_visitors;
+  try {
+    const checkResponse = await fetch(`${apiUrl}/visitors/${encodeURIComponent(email)}`);
+    const existing = await checkResponse.json();
+    console.log("existing.registered", existing.registered)
+    // Supposons que l'API retourne un tableau des visiteurs actifs
+    if (existing.registered === true) {
+      alert("Cet email est déjà enregistré, connectez-vous !");
+      return;
+    }
+  } catch (error) {
+    alert("Erreur lors de la vérification de l'email.");
+    return;
+  }
+
+  // 3) créer le visitor
+  await fetch(`${apiUrl}/visitors`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify(user)
+    body: JSON.stringify(datas)
   })
     .then(response => response.json())
-    .then(data => {
-      currentUserId = data.id;
+    .then(datas => {
+      console.log(datas)
+      if (!datas.error)
+        alert('Vous êtes enregistré sur le site !')
+      else
+        alert('Erreur : ' + datas.error)
     });
-  //2) créer la visite
-  //seulement si on visite quelqu'un, à modifier
-  const idVisitor = currentUserId;
-  const idVisited = listboxRegister.value;
-  //visite ou formation
-  const type = document.querySelector('input[name="choix"]:checked')?.value;
+}
 
-  if (type === "visite") {
-    const idLocalVisit = await fetch(apiUrl + "/formations/" )
+const disconnect = async (ev) => {
+  //1) récupérer le mail de celui qui veut partir
 
-    console.log("idVisitor", idVisitor);
-    console.log("idVisited", idVisited);
-    console.log("type", type);
-    console.log("new Date()", new Date());
-
-    const visit = {
-      "id_user_visits": idVisitor,
-      "type_visits": type,
-      "detail_visits": idVisited,
-      "arrival_visits": new Date(),
-      "id_local_visits": idLocalVisit
-    }
-    //3) Créer le visit_log
+  let formdata = new FormData(departureForm);
+  const datas = Object.fromEntries(formdata.entries());
+  console.log("email_disconnect", datas.email_visitors)
+  // Vérifier que le datas.email_visitors n'est pas vide
+  if (!datas.email_visitors || datas.email_visitors.trim() === "") {
+    alert('Champ email vide!');
+    return;
   }
+  //2) faire la requête
+
+  await fetch(`${apiUrl}/visitors/${datas.email_visitors}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(datas)
+  })
+    .then(response => response.json())
+    .then(datas => {
+      console.log(datas)
+      //3) alerter l'utilisateur qu'il est déconnecté
+      if (!datas.error)
+        alert('Vous êtes sorti du site !')
+      else
+        alert('Erreur : ' + datas.error)
+    });
 }
 
 const switchForm = () => {
   if (tabsBool[0]) {
-    arrivalSection.style.display = "grid";
-    departureSection.style.display = "none";
+    arrival.classList.remove("hidden");
+    departure.classList.add("hidden");
 
   }
   else if (tabsBool[1]) {
-    departureSection.style.display = "grid";
-    arrivalSection.style.display = "none";
+    arrival.classList.add("hidden");
+    departure.classList.remove("hidden");
   }
 }
 
@@ -134,8 +263,8 @@ const setActiveTab = (activTab) => {
 //Récupérer les routes possibles
 fetch(apiUrl)
   .then(resp => resp.json())
-  .then(data => {
-    console.log(data);
+  .then(routes => {
+    console.log("routes", routes);
   })
   .catch(error => {
     console.log("error to fetch to API ", error);

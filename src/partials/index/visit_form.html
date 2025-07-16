@@ -1,43 +1,49 @@
 <div class="grid">
   <!--Switch entrée/sortie-->
-  <div class="arrivalDeparture">
+  <div class="arrivalDeparture" id="arrivalDepartureTab">
     <div class="arrivalDeparture__arrival" id="tabEntree">Entrée</div>
     <div class="arrivalDeparture__departure" id="tabSortie">Sortie</div>
   </div>
 
   <!--===Entrée====-->
   <section class="arrival" id="arrival">
-    <form method="post" id="arrivalForm">
-    <h1 class="arrival__title">Identification</h1>
+    <form id="arrivalForm">
+      <h1 class="arrival__title">Identification</h1>
 
       <!--fields-->
       <div class="arrival__fields">
-        <input type="text" placeholder="Nom" id="registerName"/>
-        <input type="text" placeholder="Prénom" id="registerFirstname"/>
-        <input type="email" placeholder="Email" id="registerEmail"/>
+        <input type="text" name="name_visitors" placeholder="Nom" id="registerName" />
+        <input type="text" name="firstname_visitors" placeholder="Prénom" id="registerFirstname" />
+        <input type="email" name="email_visitors" placeholder="Email" id="registerEmail" />
       </div>
       <!--inputs radio-->
       <label class="label arrival__motifLabel">Motif de la visite :</label>
       <div class="arrival__inputsRadio">
         <div class="arrival__inputsRadioFormation">
-          <input type="radio" id="formation" name="choix" value="formation" />
+          <input type="radio" id="formation" name="motif_visitors" value="formation" />
           <label for="formation">Formation</label>
         </div>
         <div class="arrival__inputsRadioVisite">
-          <input type="radio" id="visite" name="choix" value="visite" />
+          <input type="radio" id="visite" name="motif_visitors" value="visite" />
           <label for="visite">Visite</label>
         </div>
       </div>
-      <select name="arrival__typeVisite" id="listboxRegister">
-        <option value="null"></option>
+      <select name="detail_visitors" id="detail_visitors">
+        <option value="">Veuillez choisir</option>
       </select>
-      <button class="button arrival__button" id="registerBtn">Valider l'entrée</button>
+      <button class="button arrival__button" id="arrivalBtn">Valider l'entrée</button>
     </form>
-    <a href="" class="arrival__qrLink">Vous avez un QR Code ou vous êtes déjà enregistré ?</a>
+    <a href="#" class="arrival__qrLink" id="arrival_qrLink">Vous avez un QR Code ou vous êtes déjà enregistré ?</a>
+
+    <form id="arrival_connexion_form" class="arrival__connexionForm hidden">
+      <label for="" class="label arrival__labelMail">Saisissez votre email</label>
+      <input type="email" placeholder="Email" name="email_visitors" class="arrival__mail" />
+      <button class="button arrival__button">Valider l'entrée</button>
+    </form>
   </section>
 
   <!--===Sortie====-->
-  <section class="departure" id="departure">
+  <section class="departure hidden" id="departure">
     <h1 class="departure__title">Sortie</h1>
 
     <div class="departure__qrCode">
@@ -45,9 +51,9 @@
       <div class="departure__scanZone"><span>scan zone</span></div>
     </div>
 
-    <form method="post" class="departure__deconnexionForm">
+    <form id="departureForm" class="departure__deconnexionForm">
       <label for="" class="label departure__labelMail">Saisissez votre email</label>
-      <input type="email" placeholder="Email" class="departure__mail"/>
+      <input type="email" placeholder="Email" name="email_visitors" class="departure__mail" />
       <button class="button departure__button">Valider la sortie</button>
     </form>
   </section>
