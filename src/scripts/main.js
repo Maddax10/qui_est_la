@@ -64,7 +64,7 @@ const motif_visitors = document.querySelector('input[name="motif_visitors"]:chec
   }
 
   try {
-    const checkRegister = await fetch(`${apiUrl}/visitors/${encodeURIComponent(email_visitors)}`);
+    const checkRegister = await fetch(`${apiUrl}/visitors/registered/${encodeURIComponent(email_visitors)}`);
     const checkConnected = await fetch(`${apiUrl}/visitors/connected/${encodeURIComponent(email_visitors)}`);
 
     const existingRegister = await checkRegister.json();
@@ -82,7 +82,7 @@ const motif_visitors = document.querySelector('input[name="motif_visitors"]:chec
     else {
       //Récupérer les infos dans la BD de la dernière ligne du visitor
 
-      fetch(`${apiUrl}/visitors/${encodeURIComponent(email_visitors)}`)
+      fetch(`${apiUrl}/visitors/registered/${encodeURIComponent(email_visitors)}`)
         .then(response => response.json())
         .then(datas => {
           //supprimer les données inutiles
@@ -171,7 +171,7 @@ const register = async (ev) => {
   // 2) Vérifier si l'utilisateur est déjà enregistré
   const email = datas.email_visitors;
   try {
-    const checkResponse = await fetch(`${apiUrl}/visitors/${encodeURIComponent(email)}`);
+    const checkResponse = await fetch(`${apiUrl}/visitors/registered/${encodeURIComponent(email)}`);
     const existing = await checkResponse.json();
     console.log("existing.registered", existing.registered)
     // Supposons que l'API retourne un tableau des visiteurs actifs
